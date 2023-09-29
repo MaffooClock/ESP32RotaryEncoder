@@ -1,0 +1,20 @@
+{
+    "name": "ESP32RotaryEncoder",
+    "keywords": "arduino, rotary encoder, button, gpio, interrupts",
+    "description": "ESP32RotaryEncoder is a small library that makes implementing a rotary encoder on ESP32 easy.  It uses interrupts for instant detection of knob turns or button presses without blocking or other delays.",
+    "version": "1.0",
+    "authors": [
+        {
+            "name": "Matthew Clark",
+            "url": "https://github.com/MaffooClock",
+            "maintainer": true
+        }
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/MaffooClock/ESP32RotaryEncoder"
+    },
+   "frameworks": "arduino",
+   "platforms": "espressif8266, espressif32",
+   "license": "MIT"
+}
