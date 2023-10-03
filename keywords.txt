@@ -1,0 +1,46 @@
+############################################
+# Syntax Coloring Map For ESP32RotaryEncoder
+############################################
+
+#######################################################
+# The Arduino IDE requires the use of a tab separator
+# between the name and identifier. Without this tab the
+# keyword is not highlighted.
+#
+# Reference: https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.5:-Library-specification#keywords
+#######################################################
+
+#######################################
+# Datatypes & Classes (KEYWORD1)
+#######################################
+
+RotaryEncoder					KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+RotaryEncoder::attachInterrupts	KEYWORD2
+RotaryEncoder::begin			KEYWORD2
+RotaryEncoder::beginLoopTimer	KEYWORD2
+RotaryEncoder::buttonPressed	KEYWORD2
+RotaryEncoder::constrainValue	KEYWORD2
+RotaryEncoder::detachInterrupts	KEYWORD2
+RotaryEncoder::disable			KEYWORD2
+RotaryEncoder::enable			KEYWORD2
+RotaryEncoder::encoderChanged	KEYWORD2
+RotaryEncoder::getEncoderValue	KEYWORD2
+RotaryEncoder::isEnabled		KEYWORD2
+RotaryEncoder::onPressed		KEYWORD2
+RotaryEncoder::onTurned			KEYWORD2
+RotaryEncoder::setBoundaries	KEYWORD2
+RotaryEncoder::setEncoderType	KEYWORD2
+RotaryEncoder::setEncoderValue	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+RE_DEFAULT_PIN					LITERAL1
+RE_DEFAULT_STEPS				LITERAL1
+RE_LOOP_INTERVAL				LITERAL1
