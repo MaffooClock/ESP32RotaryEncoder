@@ -1,6 +1,6 @@
 # ESP32RotaryEncoder
 
-[![arduino-library-badge](https://www.ardu-badge.com/badge/ESP32RotaryEncoder.svg?)](https://www.ardu-badge.com/ESP32RotaryEncoder) [![License](https://img.shields.io/badge/license-MIT%20License-blue.svg)](http://doge.mit-license.org)
+[![PlatformIO Registry](https://badges.registry.platformio.org/packages/maffooclock/library/ESP32RotaryEncoder.svg)](https://registry.platformio.org/libraries/maffooclock/ESP32RotaryEncoder) [![arduino-library-badge](https://www.ardu-badge.com/badge/ESP32RotaryEncoder.svg?)](https://www.ardu-badge.com/ESP32RotaryEncoder) [![License](https://img.shields.io/badge/license-MIT%20License-blue.svg)](http://doge.mit-license.org)
 
 A simple Arduino library for implementing a rotary encoder on an ESP32 using interrupts and callbacks.
 
