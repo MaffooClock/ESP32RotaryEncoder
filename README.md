@@ -125,5 +125,5 @@ This library more than likely won't work at all on non-ESP32 devices -- it uses 
 
 ## Examples
 
-_Coming soon!_
+Check the [examples](https://github.com/MaffooClock/ESP32RotaryEncoder/tree/main/examples) folder.
 
