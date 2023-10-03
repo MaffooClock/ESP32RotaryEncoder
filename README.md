@@ -43,9 +43,11 @@ There are a few ways, choose whichever you prefer (pick **one**, don't do all th
 
 #### Arduino IDE
 
-I'm working on submitting the library for admission into the Arduino Library Manager index.  Meanwhile, manual installation is the only option for Arduino IDE.
+There are two ways (pick **one**, don't do both!):
 
-Download the [latest release](https://github.com/MaffooClock/ESP32RotaryEncoder/releases/latest), then see the documentation on [Importing a .zip Library](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries#importing-a-zip-library).
+- Search the Library Manager for `ESP32RotaryEncoder`
+
+-  Manual install: download the [latest release](https://github.com/MaffooClock/ESP32RotaryEncoder/releases/latest), then see the documentation on [Importing a .zip Library](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries#importing-a-zip-library).
 
 ### After Installation
 
