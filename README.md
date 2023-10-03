@@ -27,29 +27,29 @@ Garry wrote some functions that incorporated the use of a lookup table, which is
 
 ## Installation
 
-I will soon be publishing this to the [PlatformIO Registry](https://registry.platformio.org/) and [Arduino Library Manager](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries#using-the-library-manager).
+#### PlatformIO
 
-In the meantime, if you want to use this library, you'll need to install it manually.  Once I've got them published, I'll update this section.
+There are a few ways, choose whichever you prefer (pick **one**, don't do all three!):
 
-### PlatformIO
+1. Search the [Library Registry](https://registry.platformio.org/search?t=library) for `MaffooClock/ESP32RotaryEncoder` and install it automatically.
 
-Edit your [platformio.ini](https://docs.platformio.org/en/latest/projectconf/index.html) file, and add this repo to your [`lib_deps`](https://docs.platformio.org/en/latest/projectconf/sections/env/options/library/lib_deps.html) stanza.
+2. Edit your [platformio.ini](https://docs.platformio.org/en/latest/projectconf/index.html) file and add `MaffooClock/ESP32RotaryEncoder@^1.0.1` to your [`lib_deps`](https://docs.platformio.org/en/latest/projectconf/sections/env/options/library/lib_deps.html) stanza.
 
-If you're not familiar with editing your platformio.ini file manually, it should look something like this:
-```ini
-[env:arduino_nano_esp32]
-platform = espressif32
-board = arduino_nano_esp32
-framework = arduino
-lib_deps = 
-	https://github.com/MaffooClock/ESP32RotaryEncoder.git
-```
+3. Use the command line interface:
+   ```
+   cd MyProject
+   pio pkg install --library "MaffooClock/ESP32RotaryEncoder@^1.0.1"
+   ```
 
-Alternatively, you can [download the ZIP](https://github.com/MaffooClock/ESP32RotaryEncoder/archive/refs/heads/main.zip) and un-zip it inside the `lib` directory inside your project.
+#### Arduino IDE
 
-### Arduino IDE
+I'm working on submitting the library for admission into the Arduino Library Manager index.  Meanwhile, manual installation is the only option for Arduino IDE.
 
-See their documentation on [Importing a .zip Library](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries#importing-a-zip-library).
+Download the [latest release](https://github.com/MaffooClock/ESP32RotaryEncoder/releases/latest), then see the documentation on [Importing a .zip Library](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries#importing-a-zip-library).
+
+### After Installation
+
+Just add `include <ESP32RotaryEncoder.h>` to the top of your source file.
 
 
 ## Usage
