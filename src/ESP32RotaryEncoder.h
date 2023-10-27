@@ -20,23 +20,19 @@
 		#define ARDUINO_ISR_ATTR IRAM_ATTR
 	#endif
 
-	/**
-	 * BUG ALERT!
-	 * 
-	 * As of 28 September 2023
-	 * 
-	 * This will fail to compile.  You need to modify FunctionalInterrupt.h and change:
-	 *     void attachInterrupt(...)
-	 * to:
-	 *     void (attachInterrupt)(...)
-	 * 
-	 * See: https://forum.arduino.cc/t/easybutton-library-sample-code-does-not-work/1155696/3
-	 * 
-	 * Also see `attachInterrupts()` in ESP32RotaryEncoder.cpp for
-	 * the note about the `attachInterrupt()` macro
-	 */
-	#include <FunctionalInterrupt.h>
-
+	#if defined( ESP_ARDUINO_VERSION ) && ( ESP_ARDUINO_VERSION == ESP_ARDUINO_VERSION_VAL(2,0,10) )
+		/**
+		 * BUG ALERT!
+		 *
+		 * With Arduino-ESP32 core 2.0.10, the #include statement below
+		 * fails to compile due to a bug.
+		 * Also see `attachInterrupts()` in ESP32RotaryEncoder.cpp for
+		 * the note about the `attachInterrupt()` macro in 2.x cores.
+		 */
+		#error Please upgrade the Arduino-ESP32 core to use this library.
+	#else
+		#include <FunctionalInterrupt.h>
+	#endif
 #endif
 
 #define RE_DEFAULT_PIN  -1
