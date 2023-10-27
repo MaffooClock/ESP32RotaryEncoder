@@ -84,12 +84,14 @@ void RotaryEncoder::beginLoopTimer()
 
 void RotaryEncoder::attachInterrupts()
 {
-	#if defined( CORE_CORE_FUNCTIONALINTERRUPT_H_ ) && defined( __IO_PIN_REMAP_H__ ) && defined( attachInterrupt )
+	#if defined( BOARD_HAS_PIN_REMAP ) && ( ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(3,0,0) )
 		/**
-		 * The io_pin_remap.h defines a `attachInterrupt()` macro that stomps on the function defined
-		 * in FunctionalInterrupt.h, which prevents attaching class methods to interrupts.  The macro just
-		 * folds-in a call to `digitalPinToGPIONumber()`, but FunctionalInterrupt.h does this too, so
-		 * we actually don't need the macro at all.
+		 * The io_pin_remap.h in Arduino-ESP32 cores of the 2.0.x family
+		 * (since 2.0.10) define an `attachInterrupt()` macro that folds-in
+		 * a call to `digitalPinToGPIONumber()`, but FunctionalInterrupt.cpp
+		 * does this too, so we actually don't need the macro at all.
+		 * Since 3.x the call inside the function was removed, so the wrapping
+		 * macro is useful again.
 		 */
 		#undef attachInterrupt
 	#endif
