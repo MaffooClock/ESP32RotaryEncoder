@@ -33,12 +33,12 @@ There are a few ways, choose whichever you prefer (pick **one**, don't do all th
 
 - Search the [Library Registry](https://registry.platformio.org/search?t=library) for `MaffooClock/ESP32RotaryEncoder` and install it automatically.
 
-- Edit your [platformio.ini](https://docs.platformio.org/en/latest/projectconf/index.html) file and add `MaffooClock/ESP32RotaryEncoder@^1.0.3` to your [`lib_deps`](https://docs.platformio.org/en/latest/projectconf/sections/env/options/library/lib_deps.html) stanza.
+- Edit your [platformio.ini](https://docs.platformio.org/en/latest/projectconf/index.html) file and add `MaffooClock/ESP32RotaryEncoder@^1.0.4` to your [`lib_deps`](https://docs.platformio.org/en/latest/projectconf/sections/env/options/library/lib_deps.html) stanza.
 
 - Use the command line interface:
    ```shell
    cd MyProject
-   pio pkg install --library "MaffooClock/ESP32RotaryEncoder@^1.0.3"
+   pio pkg install --library "MaffooClock/ESP32RotaryEncoder@^1.0.4"
    ```
 
 #### Arduino IDE

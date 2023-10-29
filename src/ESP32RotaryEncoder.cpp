@@ -219,7 +219,7 @@ void ARDUINO_ISR_ATTR RotaryEncoder::loop()
 
 void ARDUINO_ISR_ATTR RotaryEncoder::_button_ISR()
 {
-    static unsigned long _lastInterruptTime = millis();
+    static unsigned long _lastInterruptTime = 0;
 
 	if( ( millis() - _lastInterruptTime ) < 30 )
 		return;
