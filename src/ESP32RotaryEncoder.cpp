@@ -38,12 +38,31 @@ void RotaryEncoder::setEncoderType( EncoderType type )
   }
 }
 
-void RotaryEncoder::setBoundaries( long minEncoderValue, long maxEncoderValue, bool circleValues )
+void RotaryEncoder::setBoundaries( long minValue, long maxValue, bool circleValues )
 {
-  this->minEncoderValue = minEncoderValue;
-  this->maxEncoderValue = maxEncoderValue;
+  setMinValue( minValue );
+  setMaxValue( maxValue );
+  setCircular( circleValues );
+}
 
+void RotaryEncoder::setMinValue( long minValue )
+{
+  this->minEncoderValue = minValue;
+}
+
+void RotaryEncoder::setMaxValue( long maxValue )
+{
+  this->maxEncoderValue = maxValue;
+}
+
+void RotaryEncoder::setCircular( bool circleValues )
+{
   this->circleValues = circleValues;
+}
+
+void RotaryEncoder::setStepValue( long stepValue )
+{
+  this->stepValue = stepValue;
 }
 
 void RotaryEncoder::onTurned( EncoderCallback f )
@@ -242,8 +261,7 @@ void ARDUINO_ISR_ATTR RotaryEncoder::_encoder_ISR()
   static uint8_t _previousAB = 3;
   static int8_t _encoderPosition = 0;
   static unsigned long _lastInterruptTime = 0;
-
-  unsigned long _interruptTime = millis();
+  static long _stepValue;
 
   bool valueChanged = false;
 
@@ -254,34 +272,41 @@ void ARDUINO_ISR_ATTR RotaryEncoder::_encoder_ISR()
 
   _encoderPosition += encoderStates[( _previousAB & 0x0f )];
 
-  // Update counter if encoder has rotated a full detent
-  // For the following comments, we'll assume it's 4 steps per detent
-  // The tripping point is `STEPS - 1` (so, 3 in this example)
 
-  if( _encoderPosition > encoderTripPoint )             // Four steps forward
+  /**
+   * Based on how fast the encoder is being turned, we can apply an acceleration factor
+   */
+
+  unsigned long speed = millis() - _lastInterruptTime;
+
+  if( speed > 40 )                                 // Greater than 40 milliseconds
+    _stepValue = this->stepValue;                  // Increase/decrease by 1 x stepValue
+
+  else if( speed > 20 )                            // Greater than 20 milliseconds
+    _stepValue = ( this->stepValue <= 9 ) ?        // Increase/decrease by 3 x stepValue
+      this->stepValue : ( this->stepValue * 3 )    // But only if stepValue > 9
+    ;
+
+  else                                             // Faster than 20 milliseconds
+    _stepValue = ( this->stepValue <= 100 ) ?      // Increase/decrease by 10 x stepValue
+      this->stepValue : ( this->stepValue * 10 )   // But only if stepValue > 100
+    ;
+
+
+  /**
+   * Update counter if encoder has rotated a full detent
+   * For the following comments, we'll assume it's 4 steps per detent
+   * The tripping point is `STEPS - 1` (so, 3 in this example)
+   */
+
+  if( _encoderPosition > encoderTripPoint )        // Four steps forward
   {
-    if( _interruptTime - _lastInterruptTime > 40 )      // Greater than 40 milliseconds
-      this->currentValue++;                             // Increase by 1
-
-    else if( _interruptTime - _lastInterruptTime > 20 ) // Greater than 20 milliseconds
-      this->currentValue += 3;                          // Increase by 3
-
-    else                                                // Faster than 20 milliseconds
-      this->currentValue += 10;                         // Increase by 10
-
+    this->currentValue += _stepValue;
     valueChanged = true;
   }
-  else if( _encoderPosition < -encoderTripPoint )       // Four steps backwards
+  else if( _encoderPosition < -encoderTripPoint )  // Four steps backwards
   {
-    if( _interruptTime - _lastInterruptTime > 40 )      // Greater than 40 milliseconds
-      this->currentValue--;                             // Increase by 1
-
-    else if( _interruptTime - _lastInterruptTime > 20 ) // Greater than 20 milliseconds
-      this->currentValue -= 3;                          // Increase by 3
-
-    else                                                // Faster than 20 milliseconds
-      this->currentValue -= 10;                         // Increase by 10
-
+    this->currentValue -= _stepValue;
     valueChanged = true;
   }
 
@@ -289,7 +314,10 @@ void ARDUINO_ISR_ATTR RotaryEncoder::_encoder_ISR()
   {
     encoderChangedFlag = true;
 
+    // Reset our "step counter"
     _encoderPosition = 0;
-    _lastInterruptTime = millis();                        // Remember time
+
+    // Remember current time so we can calculate speed
+    _lastInterruptTime = millis();
   }
 }

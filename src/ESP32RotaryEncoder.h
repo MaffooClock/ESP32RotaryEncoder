@@ -95,11 +95,10 @@ class RotaryEncoder {
      */
     void setEncoderType( EncoderType type );
 
-
     /**
      * @brief Set the minimum and maximum values that the encoder will return.
      *
-     * @note Call this in `setup()`
+     * @note This is a convenience function that calls `setMinValue()`, `setMaxValue()`, and `setCircular()`
      *
      * @param minValue      Minimum value (e.g. 0)
      * @param maxValue      Maximum value (e.g. 10)
@@ -107,6 +106,42 @@ class RotaryEncoder {
      *                      If false (default), turning past the minimum or maximum will return that boundary
      */
     void setBoundaries( long minValue, long maxValue, bool circleValues = false );
+
+    /**
+     * @brief Set the minimum value that the encoder will return.
+     *
+     * @note Call this in `setup()`
+     *
+     * @param minValue  Minimum value
+     */
+    void setMinValue( long minValue );
+
+    /**
+     * @brief Set the maximum value that the encoder will return.
+     *
+     * @note Call this in `setup()`
+     *
+     * @param maxValue  Maximum value
+     */
+    void setMaxValue( long maxValue );
+
+    /**
+     * @brief Set whether the minimum or maximum value will wrap around to the other.
+     *
+     * @note Call this in `setup()`
+     *
+     * @param maxValue  Maximum value
+     */
+    void setCircular( bool circleValues );
+
+    /**
+     * @brief Set the amount of increment/decrement by which the value tracked by the encoder will change.
+     *
+     * @note Call this in `setup()`
+     *
+     * @param stepValue  Step value
+     */
+    void setStepValue( long stepValue );
 
     /**
      * @brief Set a function to fire every time the value tracked by the encoder changes.
@@ -254,6 +289,13 @@ class RotaryEncoder {
      *
      */
     long minEncoderValue = -1; long maxEncoderValue = 1;
+
+    /**
+     * @brief The amount of increment/decrement that will be applied to the
+     * encoder value when the knob is turned.
+     *
+     */
+    long stepValue = 1;
 
     /**
      * @brief Determines whether attempts to increment or decrement beyond
