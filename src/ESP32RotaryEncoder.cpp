@@ -76,7 +76,7 @@ void RotaryEncoder::beginLoopTimer()
   _timerConfig.callback = reinterpret_cast<esp_timer_cb_t>( timerCallback );
   _timerConfig.dispatch_method = ESP_TIMER_TASK;
   _timerConfig.skip_unhandled_events = true;
-  _timerConfig.name = PSTR("RotaryEncoder::loop_ISR");
+  _timerConfig.name = "RotaryEncoder::loop_ISR";
 
   esp_timer_create( &_timerConfig, &loopTimer );
   esp_timer_start_periodic( loopTimer, RE_LOOP_INTERVAL );
