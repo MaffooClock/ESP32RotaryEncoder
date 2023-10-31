@@ -108,7 +108,7 @@ void setup_RE2()
 	// Range of values to be returned by the encoder: minimum is -100, maximum is 100
 	// The third argument specifies whether turning past the minimum/maximum will wrap
 	// around to the other side.
-    // In this example, turn past 100, stay on 100; turn past -100, stay on -100
+	// In this example, turn past 100, stay on 100; turn past -100, stay on -100
 	rotaryEncoder2.setBoundaries( -100, 100, false );
 
 	// The function specified here will be called every time the knob is turned

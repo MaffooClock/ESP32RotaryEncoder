@@ -73,42 +73,42 @@ RotaryEncoder rotaryEncoder( DI_ENCODER_A, DI_ENCODER_B, DI_ENCODER_SW, DO_ENCOD
 
 void knobCallback( int value )
 {
-	Serial.printf( PSTR("Value: %i\n"), value );
+    Serial.printf( PSTR("Value: %i\n"), value );
 }
 
 void buttonCallback()
 {
-	Serial.println( PSTR("boop!") );
+    Serial.println( PSTR("boop!") );
 }
 
 void setup()
 {
-	Serial.begin( 115200 );
+    Serial.begin( 115200 );
 
-	// This tells the library that the encoder has its own pull-up resistors
-	rotaryEncoder.setEncoderType( EncoderType::HAS_PULLUP );
+    // This tells the library that the encoder has its own pull-up resistors
+    rotaryEncoder.setEncoderType( EncoderType::HAS_PULLUP );
 
-	// Range of values to be returned by the encoder: minimum is 1, maximum is 10
-	// The third argument specifies whether turning past the minimum/maximum will
-	// wrap around to the other side:
-	//  - true  = turn past 10, wrap to 1; turn past 1, wrap to 10
-	//  - false = turn past 10, stay on 10; turn past 1, stay on 1
-	rotaryEncoder.setBoundaries( 1, 10, true );
+    // Range of values to be returned by the encoder: minimum is 1, maximum is 10
+    // The third argument specifies whether turning past the minimum/maximum will
+    // wrap around to the other side:
+    //  - true  = turn past 10, wrap to 1; turn past 1, wrap to 10
+    //  - false = turn past 10, stay on 10; turn past 1, stay on 1
+    rotaryEncoder.setBoundaries( 1, 10, true );
 
-	// The function specified here will be called every time the knob is turned
-	// and the current value will be passed to it
-	rotaryEncoder.onTurned( &knobCallback );
+    // The function specified here will be called every time the knob is turned
+    // and the current value will be passed to it
+    rotaryEncoder.onTurned( &knobCallback );
 
-	// The function specified here will be called every time the button is pushed
-	rotaryEncoder.onPressed( &buttonCallback );
+    // The function specified here will be called every time the button is pushed
+    rotaryEncoder.onPressed( &buttonCallback );
 
-	// This is where the inputs are configured and the interrupts get attached
-	rotaryEncoder.begin();
+    // This is where the inputs are configured and the interrupts get attached
+    rotaryEncoder.begin();
 }
 
 void loop()
 {
-	// Your stuff here
+    // Your stuff here
 }
 ```
 
