@@ -249,6 +249,8 @@ class RotaryEncoder {
 
   private:
 
+    const char *LOG_TAG = "ESP32RotaryEncoder";
+
     EncoderCallback callbackEncoderChanged = NULL;
     ButtonCallback callbackButtonPressed = NULL;
 

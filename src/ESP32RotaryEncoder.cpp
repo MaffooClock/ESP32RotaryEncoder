@@ -7,6 +7,8 @@ RotaryEncoder::RotaryEncoder( uint8_t encoderPinA, uint8_t encoderPinB, int8_t e
   this->encoderPinButton = encoderPinButton;
   this->encoderPinVcc    = encoderPinVcc;
   this->encoderTripPoint = encoderSteps - 1;
+
+  ESP_LOGD( LOG_TAG, "Initialized: A = %i, B = %i, Button = %i, VCC = %i, Steps = %u", encoderPinA, encoderPinB, encoderPinButton, encoderPinVcc, encoderSteps );
 }
 
 RotaryEncoder::~RotaryEncoder()
@@ -35,11 +37,20 @@ void RotaryEncoder::setEncoderType( EncoderType type )
       encoderPinMode = INPUT;
       buttonPinMode  = INPUT_PULLUP;
     break;
+
+    default:
+      ESP_LOGE( LOG_TAG, "Invalid encoder type %i", type );
+      return;
   }
+
+  ESP_LOGD( LOG_TAG, "Encoder type set to %i", type );
 }
 
 void RotaryEncoder::setBoundaries( long minValue, long maxValue, bool circleValues )
 {
+  if( minValue > maxValue )
+    ESP_LOGW( LOG_TAG, "Minimum value (%i) is greater than maximum value (%i); behavior is undefined.", minValue, maxValue );
+
   setMinValue( minValue );
   setMaxValue( maxValue );
   setCircular( circleValues );
@@ -47,21 +58,32 @@ void RotaryEncoder::setBoundaries( long minValue, long maxValue, bool circleValu
 
 void RotaryEncoder::setMinValue( long minValue )
 {
+  ESP_LOGD( LOG_TAG, "minValue = %i", minValue );
+
   this->minEncoderValue = minValue;
 }
 
 void RotaryEncoder::setMaxValue( long maxValue )
 {
+  ESP_LOGD( LOG_TAG, "maxValue = %i", maxValue );
+
   this->maxEncoderValue = maxValue;
 }
 
 void RotaryEncoder::setCircular( bool circleValues )
 {
+  ESP_LOGD( LOG_TAG, "Boundaries %s circular", ( circleValues ? "are" : "are not" ) );
+
   this->circleValues = circleValues;
 }
 
 void RotaryEncoder::setStepValue( long stepValue )
 {
+  ESP_LOGD( LOG_TAG, "stepValue = %i", stepValue );
+
+  if( stepValue > maxEncoderValue || stepValue < minEncoderValue )
+    ESP_LOGW( LOG_TAG, "Step value (%i) is outside the bounds (%i...%i); behavior is undefined.", stepValue, minEncoderValue, maxEncoderValue );
+
   this->stepValue = stepValue;
 }
 
@@ -120,6 +142,8 @@ void RotaryEncoder::attachInterrupts()
 
   if( encoderPinButton >= 0 )
     attachInterrupt( encoderPinButton, std::bind( &RotaryEncoder::_button_ISR, this ), RISING );
+
+  ESP_LOGD( LOG_TAG, "Interrupts attached" );
 }
 
 void RotaryEncoder::detachInterrupts()
@@ -127,6 +151,8 @@ void RotaryEncoder::detachInterrupts()
   detachInterrupt( encoderPinA );
   detachInterrupt( encoderPinB );
   detachInterrupt( encoderPinButton );
+
+  ESP_LOGD( LOG_TAG, "Interrupts detached" );
 }
 
 void RotaryEncoder::begin( bool useTimer )
@@ -153,6 +179,8 @@ void RotaryEncoder::begin( bool useTimer )
 
   if( useTimer )
     beginLoopTimer();
+
+  ESP_LOGD( LOG_TAG, "RotaryEncoder active" );
 }
 
 bool RotaryEncoder::isEnabled()
@@ -168,6 +196,8 @@ void RotaryEncoder::enable()
   attachInterrupts();
 
   _isEnabled = true;
+
+  ESP_LOGD( LOG_TAG, "Input enabled" );
 }
 
 void RotaryEncoder::disable()
@@ -178,12 +208,17 @@ void RotaryEncoder::disable()
   detachInterrupts();
 
   _isEnabled = false;
+
+  ESP_LOGD( LOG_TAG, "Input disabled" );
 }
 
 bool RotaryEncoder::buttonPressed()
 {
   if( !_isEnabled )
     return false;
+
+  if( buttonPressedFlag )
+    ESP_LOGD( LOG_TAG, "Button pressed" );
 
   bool wasPressed = buttonPressedFlag;
 
@@ -196,6 +231,9 @@ bool RotaryEncoder::encoderChanged()
 {
   if( !_isEnabled )
     return false;
+
+  if( encoderChangedFlag )
+    ESP_LOGD( LOG_TAG, "Knob turned; value: %i", getEncoderValue() );
 
   bool hasChanged = encoderChangedFlag;
 
@@ -213,15 +251,23 @@ long RotaryEncoder::getEncoderValue()
 
 void RotaryEncoder::constrainValue()
 {
+  long unconstrainedValue = currentValue;
+
   if( currentValue < minEncoderValue )
     currentValue = circleValues ? maxEncoderValue : minEncoderValue;
 
   else if( currentValue > maxEncoderValue )
     currentValue = circleValues ? minEncoderValue : maxEncoderValue;
+
+  if( unconstrainedValue != currentValue )
+    ESP_LOGD( LOG_TAG, "Encoder value '%i' constrained to '%i'", unconstrainedValue, currentValue );
 }
 
 void RotaryEncoder::setEncoderValue( long newValue )
 {
+  if( newValue != currentValue )
+    ESP_LOGD( LOG_TAG, "Overriding encoder value from '%i' to '%i'", currentValue, newValue );
+
   currentValue = newValue;
 
   constrainValue();
