@@ -161,11 +161,11 @@ There are other options and methods you can call, but this is just the most basi
 
 ## Debugging
 
-This library makes use of the ESP32-IDF native logging to output some helpful debugging messages to the serial console.  To see it, you may have to add a build flag to set the logging level.  For PlatformIO, add `-DCORE_DEBUG_LEVEL=4` to the [`build_flags`](https://docs.platformio.org/en/stable/projectconf/sections/env/options/build/build_flags.html) option in [`platformio.ini`](https://docs.platformio.org/en/stable/projectconf/index.html).
+This library makes use of the ESP32-IDF native logging to output some helpful debugging messages to the serial console.  To see it, you may have to add a build flag to set the logging level.  For PlatformIO, add `-DCORE_DEBUG_LEVEL=4` to the [`build_flags`](https://docs.platformio.org/en/stable/projectconf/sections/env/options/build/build_flags.html) option in [platformio.ini](https://docs.platformio.org/en/stable/projectconf/index.html).
 
 After debugging, you can either remove the build flag (if you had to add it), or just reduce the level from debug (4) to info (3), warning (2), or error (1).  You can also use verbose (5), but this library does not currently log at that high of a level.
 
-See [`esp32-hal-log.h`](https://github.com/espressif/arduino-esp32/blob/master/cores/esp32/esp32-hal-log.h) for more details.
+See [esp32-hal-log.h](https://github.com/espressif/arduino-esp32/blob/master/cores/esp32/esp32-hal-log.h) for more details.
 
 
 ## Compatibility
@@ -177,5 +177,5 @@ This library more than likely won't work at all on non-ESP32 devices -- it uses 
 
 ## Examples
 
-Check the [examples](https://github.com/MaffooClock/ESP32RotaryEncoder/tree/main/examples) folder.
+Check the [examples](/examples) folder.
 
