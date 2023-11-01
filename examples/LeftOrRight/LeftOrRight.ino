@@ -75,7 +75,7 @@ void knobCallback( long value )
 
 void buttonCallback( unsigned long duration )
 {
-	Serial.printf( "boop! button was down for %u ms\n", duration );
+	Serial.printf( "boop! button was down for %lu ms\n", duration );
 }
 
 void setup()

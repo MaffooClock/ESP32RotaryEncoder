@@ -43,7 +43,7 @@ void buttonLongPress()
 
 void knobCallback( long value )
 {
-	Serial.printf( "Value: %i\n", value );
+	Serial.printf( "Value: %ld\n", value );
 }
 
 void buttonCallback( unsigned long duration )

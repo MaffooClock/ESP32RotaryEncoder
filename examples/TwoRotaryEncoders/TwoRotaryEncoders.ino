@@ -43,12 +43,12 @@ RotaryEncoder rotaryEncoder2( RE2_DI_ENCODER_A, RE2_DI_ENCODER_B, RE2_DI_ENCODER
 
 void printKnob1Value( long value )
 {
-	Serial.printf( "RE1 value: %i\n", value );
+	Serial.printf( "RE1 value: %ld\n", value );
 }
 
 void printKnob2Value( long value )
 {
-	Serial.printf( "RE2 value: %i\n", value );
+	Serial.printf( "RE2 value: %ld\n", value );
 }
 
 void button1ToggleRE2( unsigned long duration )

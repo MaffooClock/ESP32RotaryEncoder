@@ -29,12 +29,12 @@ RotaryEncoder rotaryEncoder( DI_ENCODER_A, DI_ENCODER_B, DI_ENCODER_SW, DO_ENCOD
 
 void knobCallback( long value )
 {
-	Serial.printf( "Value: %i\n", value );
+	Serial.printf( "Value: %ld\n", value );
 }
 
 void buttonCallback( unsigned long duration )
 {
-	Serial.printf( "boop! button was down for %u ms\n", duration );
+	Serial.printf( "boop! button was down for %lu ms\n", duration );
 }
 
 void setup()

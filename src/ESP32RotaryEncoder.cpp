@@ -8,7 +8,7 @@ RotaryEncoder::RotaryEncoder( uint8_t encoderPinA, uint8_t encoderPinB, int8_t e
   this->encoderPinVcc    = encoderPinVcc;
   this->encoderTripPoint = encoderSteps - 1;
 
-  ESP_LOGD( LOG_TAG, "Initialized: A = %i, B = %i, Button = %i, VCC = %i, Steps = %u", encoderPinA, encoderPinB, encoderPinButton, encoderPinVcc, encoderSteps );
+  ESP_LOGD( LOG_TAG, "Initialized: A = %u, B = %u, Button = %i, VCC = %i, Steps = %u", encoderPinA, encoderPinB, encoderPinButton, encoderPinVcc, encoderSteps );
 }
 
 RotaryEncoder::~RotaryEncoder()
@@ -49,7 +49,7 @@ void RotaryEncoder::setEncoderType( EncoderType type )
 void RotaryEncoder::setBoundaries( long minValue, long maxValue, bool circleValues )
 {
   if( minValue > maxValue )
-    ESP_LOGW( LOG_TAG, "Minimum value (%i) is greater than maximum value (%i); behavior is undefined.", minValue, maxValue );
+    ESP_LOGW( LOG_TAG, "Minimum value (%ld) is greater than maximum value (%ld); behavior is undefined.", minValue, maxValue );
 
   setMinValue( minValue );
   setMaxValue( maxValue );
@@ -58,14 +58,14 @@ void RotaryEncoder::setBoundaries( long minValue, long maxValue, bool circleValu
 
 void RotaryEncoder::setMinValue( long minValue )
 {
-  ESP_LOGD( LOG_TAG, "minValue = %i", minValue );
+  ESP_LOGD( LOG_TAG, "minValue = %ld", minValue );
 
   this->minEncoderValue = minValue;
 }
 
 void RotaryEncoder::setMaxValue( long maxValue )
 {
-  ESP_LOGD( LOG_TAG, "maxValue = %i", maxValue );
+  ESP_LOGD( LOG_TAG, "maxValue = %ld", maxValue );
 
   this->maxEncoderValue = maxValue;
 }
@@ -79,10 +79,10 @@ void RotaryEncoder::setCircular( bool circleValues )
 
 void RotaryEncoder::setStepValue( long stepValue )
 {
-  ESP_LOGD( LOG_TAG, "stepValue = %i", stepValue );
+  ESP_LOGD( LOG_TAG, "stepValue = %ld", stepValue );
 
   if( stepValue > maxEncoderValue || stepValue < minEncoderValue )
-    ESP_LOGW( LOG_TAG, "Step value (%i) is outside the bounds (%i...%i); behavior is undefined.", stepValue, minEncoderValue, maxEncoderValue );
+    ESP_LOGW( LOG_TAG, "Step value (%ld) is outside the bounds (%ld...%ld); behavior is undefined.", stepValue, minEncoderValue, maxEncoderValue );
 
   this->stepValue = stepValue;
 }
@@ -220,7 +220,7 @@ bool RotaryEncoder::buttonPressed()
     return false;
 
   if( buttonPressedFlag )
-    ESP_LOGD( LOG_TAG, "Button pressed for %u ms", buttonPressedDuration );
+    ESP_LOGD( LOG_TAG, "Button pressed for %lu ms", buttonPressedDuration );
 
   bool wasPressed = buttonPressedFlag;
 
@@ -235,7 +235,7 @@ bool RotaryEncoder::encoderChanged()
     return false;
 
   if( encoderChangedFlag )
-    ESP_LOGD( LOG_TAG, "Knob turned; value: %i", getEncoderValue() );
+    ESP_LOGD( LOG_TAG, "Knob turned; value: %ld", getEncoderValue() );
 
   bool hasChanged = encoderChangedFlag;
 
@@ -262,13 +262,13 @@ void RotaryEncoder::constrainValue()
     currentValue = circleValues ? minEncoderValue : maxEncoderValue;
 
   if( unconstrainedValue != currentValue )
-    ESP_LOGD( LOG_TAG, "Encoder value '%i' constrained to '%i'", unconstrainedValue, currentValue );
+    ESP_LOGD( LOG_TAG, "Encoder value '%ld' constrained to '%ld'", unconstrainedValue, currentValue );
 }
 
 void RotaryEncoder::setEncoderValue( long newValue )
 {
   if( newValue != currentValue )
-    ESP_LOGD( LOG_TAG, "Overriding encoder value from '%i' to '%i'", currentValue, newValue );
+    ESP_LOGD( LOG_TAG, "Overriding encoder value from '%ld' to '%ld'", currentValue, newValue );
 
   currentValue = newValue;
 
