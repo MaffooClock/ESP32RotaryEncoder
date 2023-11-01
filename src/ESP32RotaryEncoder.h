@@ -52,10 +52,10 @@ class RotaryEncoder {
 
     #if defined( ESP32 )
       typedef std::function<void(long)> EncoderCallback;
-      typedef std::function<void()> ButtonCallback;
+      typedef std::function<void(unsigned long)> ButtonCallback;
     #else
       typedef void (*EncoderCallback)(long);
-      typedef void (*ButtonCallback)();
+      typedef void (*ButtonCallback)(unsigned long);
     #endif
 
 
@@ -158,7 +158,8 @@ class RotaryEncoder {
      *
      * @note Call this in `setup()`.  May be set/changed at runtime if needed.
      *
-     * @param handler The function to call
+     * @param handler The function to call; it must accept one parameter of type long, which
+     *                will be the duration (in milliseconds) that the button was active
      */
     void onPressed( ButtonCallback f );
 
@@ -331,6 +332,12 @@ class RotaryEncoder {
      *
      */
     volatile bool buttonPressedFlag;
+
+    /**
+     * @brief
+     *
+     */
+    volatile unsigned long buttonPressedTime, buttonPressedDuration;
 
     /**
      * @brief The loop timer configured and started in `beginLoopTimer()`.

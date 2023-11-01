@@ -51,7 +51,7 @@ void printKnob2Value( long value )
 	Serial.printf( "RE2 value: %i\n", value );
 }
 
-void button1ToggleRE2()
+void button1ToggleRE2( unsigned long duration )
 {
 	if( rotaryEncoder2.isEnabled() )
 	{
@@ -65,7 +65,7 @@ void button1ToggleRE2()
 	}
 }
 
-void button2ToggleRE1()
+void button2ToggleRE1( unsigned long duration )
 {
 	if( rotaryEncoder1.isEnabled() )
 	{
@@ -94,7 +94,8 @@ void setup_RE1()
 	// and the current value will be passed to it
 	rotaryEncoder1.onTurned( &printKnob1Value );
 
-	// The function specified here will be called every time the button is pushed
+	// The function specified here will be called every time the button is pushed and
+	// the duration (in milliseconds) that the button was down will be passed to it
 	rotaryEncoder1.onPressed( &button1ToggleRE2 );
 
 	// This is where the inputs are configured and the interrupts get attached
@@ -117,7 +118,8 @@ void setup_RE2()
 	// and the current value will be passed to it
 	rotaryEncoder2.onTurned( &printKnob2Value );
 
-	// The function specified here will be called every time the button is pushed
+	// The function specified here will be called every time the button is pushed and
+	// the duration (in milliseconds) that the button was down will be passed to it
 	rotaryEncoder2.onPressed( &button2ToggleRE1 );
 
 	// This is where the inputs are configured and the interrupts get attached

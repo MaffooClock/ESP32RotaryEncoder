@@ -141,7 +141,7 @@ void RotaryEncoder::attachInterrupts()
   attachInterrupt( encoderPinB, std::bind( &RotaryEncoder::_encoder_ISR, this ), CHANGE );
 
   if( encoderPinButton > RE_DEFAULT_PIN )
-    attachInterrupt( encoderPinButton, std::bind( &RotaryEncoder::_button_ISR, this ), RISING );
+    attachInterrupt( encoderPinButton, std::bind( &RotaryEncoder::_button_ISR, this ), CHANGE );
 
   ESP_LOGD( LOG_TAG, "Interrupts attached" );
 }
@@ -161,6 +161,8 @@ void RotaryEncoder::begin( bool useTimer )
 
   encoderChangedFlag = false;
   buttonPressedFlag = false;
+  buttonPressedTime = 0;
+  buttonPressedDuration = 0;
 
   pinMode( encoderPinA, encoderPinMode );
   pinMode( encoderPinB, encoderPinMode );
@@ -218,7 +220,7 @@ bool RotaryEncoder::buttonPressed()
     return false;
 
   if( buttonPressedFlag )
-    ESP_LOGD( LOG_TAG, "Button pressed" );
+    ESP_LOGD( LOG_TAG, "Button pressed for %u ms", buttonPressedDuration );
 
   bool wasPressed = buttonPressedFlag;
 
@@ -279,17 +281,35 @@ void ARDUINO_ISR_ATTR RotaryEncoder::loop()
     callbackEncoderChanged( getEncoderValue() );
 
   if( callbackButtonPressed != NULL && buttonPressed() )
-    callbackButtonPressed();
+    callbackButtonPressed( buttonPressedDuration );
 }
 
 void ARDUINO_ISR_ATTR RotaryEncoder::_button_ISR()
 {
   static unsigned long _lastInterruptTime = 0;
 
+  // Simple software de-bounce
   if( ( millis() - _lastInterruptTime ) < 30 )
     return;
 
-  buttonPressedFlag = true;
+  // HIGH = idle, LOW = active
+  bool isPressed = !digitalRead( encoderPinButton );
+
+  if( isPressed )
+  {
+    buttonPressedTime = millis();
+
+    ESP_EARLY_LOGV( LOG_TAG, "Button pressed at %u", buttonPressedTime );
+  }
+  else
+  {
+    unsigned long now = millis();
+    buttonPressedDuration = now - buttonPressedTime;
+
+    ESP_EARLY_LOGV( LOG_TAG, "Button released at %u", now );
+
+    buttonPressedFlag = true;
+  }
 
   _lastInterruptTime = millis();
 }

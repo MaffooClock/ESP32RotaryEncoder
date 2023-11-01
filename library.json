@@ -30,6 +30,11 @@
       "name": "Left or Right",
       "base": "examples/LeftOrRight",
       "files": [ "LeftOrRight.ino" ]
+    },
+    {
+      "name": "Button Press Duration",
+      "base": "examples/ButtonPressDuration",
+      "files": [ "ButtonPressDuration.ino" ]
     }
   ],
   "frameworks": "arduino",

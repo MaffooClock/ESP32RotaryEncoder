@@ -73,9 +73,9 @@ void knobCallback( long value )
 	rotaryEncoder.setEncoderValue( 0 );
 }
 
-void buttonCallback()
+void buttonCallback( unsigned long duration )
 {
-	Serial.println( "boop!" );
+	Serial.printf( "boop! button was down for %u ms\n", duration );
 }
 
 void setup()
@@ -92,7 +92,8 @@ void setup()
 	// and the current value will be passed to it
 	rotaryEncoder.onTurned( &knobCallback );
 
-	// The function specified here will be called every time the button is pushed
+	// The function specified here will be called every time the button is pushed and
+	// the duration (in milliseconds) that the button was down will be passed to it
 	rotaryEncoder.onPressed( &buttonCallback );
 
 	// This is where the inputs are configured and the interrupts get attached

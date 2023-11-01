@@ -1,15 +1,15 @@
 /**
- * ESP32RotaryEncoder: BasicRotaryEncoder.ino
+ * ESP32RotaryEncoder: ButtonPressDuration.ino
  * 
- * This is a basic example of how to instantiate a single Rotary Encoder.
+ * This example shows how to handle long button-presses differently
+ * from long button-presses
  * 
  * Turning the knob will increment/decrement a value between 1 and 10 and
  * print it to the serial console.
  * 
  * Pressing the button will output "boop!" to the serial console.
  * 
- * Created 3 October 2023
- * Updated 1 November 2023
+ * Created 1 November 2023
  * By Matthew Clark
  */
 
@@ -23,9 +23,23 @@ const uint8_t DI_ENCODER_B   = 14;
 const int8_t  DI_ENCODER_SW  = 12;
 const int8_t  DO_ENCODER_VCC = 13;
 
+// A button-press is considered "long" if
+// it's held for more than two seconds
+const uint8_t LONG_PRESS = 2000;
+
 
 RotaryEncoder rotaryEncoder( DI_ENCODER_A, DI_ENCODER_B, DI_ENCODER_SW, DO_ENCODER_VCC );
 
+
+void buttonShortPress()
+{
+	Serial.println( "boop!" );
+}
+
+void buttonLongPress()
+{
+	Serial.println( "BOOOOOOOOOOP!" );
+}
 
 void knobCallback( long value )
 {
@@ -34,7 +48,14 @@ void knobCallback( long value )
 
 void buttonCallback( unsigned long duration )
 {
-	Serial.printf( "boop! button was down for %u ms\n", duration );
+	if( duration > LONG_PRESS )
+	{
+		buttonLongPress();
+	}
+	else
+	{
+		buttonShortPress();
+	}
 }
 
 void setup()
