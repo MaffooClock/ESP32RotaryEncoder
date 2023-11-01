@@ -9,15 +9,19 @@
  * Pressing the button will output "boop!" to the serial console.
  * 
  * Created 3 October 2023
+ * Updated 1 November 2023
  * By Matthew Clark
  */
 
 #include <ESP32RotaryEncoder.h>
 
-#define DO_ENCODER_VCC D2
-#define DI_ENCODER_SW  D3
-#define DI_ENCODER_B   D4 // DT
-#define DI_ENCODER_A   D5 // CLK
+
+// Change these to the actual pin numbers that
+// you've connected your rotary encoder to
+const uint8_t DI_ENCODER_A   = 27;
+const uint8_t DI_ENCODER_B   = 14;
+const int8_t  DI_ENCODER_SW  = 12;
+const int8_t  DO_ENCODER_VCC = 13;
 
 
 RotaryEncoder rotaryEncoder( DI_ENCODER_A, DI_ENCODER_B, DI_ENCODER_SW, DO_ENCODER_VCC );

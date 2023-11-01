@@ -10,15 +10,17 @@
 
 #include <ESP32RotaryEncoder.h>
 
+
 // Change these to the actual pin numbers that
 // you've connected your rotary encoder to
-#define DI_ENCODER_A   27 // CLK
-#define DI_ENCODER_B   14 // DT
-#define DI_ENCODER_SW  12
-#define DO_ENCODER_VCC 13
+const uint8_t DI_ENCODER_A   = 27;
+const uint8_t DI_ENCODER_B   = 14;
+const int8_t  DI_ENCODER_SW  = 12;
+const int8_t  DO_ENCODER_VCC = 13;
 
 
 RotaryEncoder rotaryEncoder( DI_ENCODER_A, DI_ENCODER_B, DI_ENCODER_SW, DO_ENCODER_VCC );
+
 
 // Used by the `loop()` to know when to
 // fire  an event when the knob is turned

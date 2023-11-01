@@ -19,20 +19,22 @@
  * will have no effect.
  * 
  * Created 3 October 2023
+ * Updated 1 November 2023
  * By Matthew Clark
  */
 
 #include <ESP32RotaryEncoder.h>
 
-#define RE1_DO_ENCODER_VCC D2
-#define RE1_DI_ENCODER_SW  D3
-#define RE1_DI_ENCODER_B   D4 // DT
-#define RE1_DI_ENCODER_A   D5 // CLK
 
-#define RE2_DO_ENCODER_VCC D6
-#define RE2_DI_ENCODER_SW  D7
-#define RE2_DI_ENCODER_B   D8 // DT
-#define RE2_DI_ENCODER_A   D9 // CLK
+const uint8_t RE1_DI_ENCODER_A   = 27;
+const uint8_t RE1_DI_ENCODER_B   = 14;
+const int8_t  RE1_DI_ENCODER_SW  = 12;
+const int8_t  RE1_DO_ENCODER_VCC = 13;
+
+const uint8_t RE2_DI_ENCODER_A   = 35;
+const uint8_t RE2_DI_ENCODER_B   = 32;
+const int8_t  RE2_DI_ENCODER_SW  = 33;
+const int8_t  RE2_DO_ENCODER_VCC = 25;
 
 
 RotaryEncoder rotaryEncoder1( RE1_DI_ENCODER_A, RE1_DI_ENCODER_B, RE1_DI_ENCODER_SW, RE1_DO_ENCODER_VCC );
