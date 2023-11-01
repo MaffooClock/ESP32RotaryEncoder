@@ -104,14 +104,14 @@ Adding a rotary encoder instance is easy:
     {
         // This gets executed every time the knob is turned
 
-        Serial.printf( PSTR("Value: %i\n"), value );
+        Serial.printf( "Value: %i\n", value );
     }
 
     void buttonCallback()
     {
         // This gets executed every time the pushbutton is pressed
 
-        Serial.println( PSTR("boop!") );
+        Serial.println( "boop!" );
     }
     ```
 
