@@ -148,7 +148,8 @@ class RotaryEncoder {
      *
      * @note Call this in `setup()`.  May be set/changed at runtime if needed.
      *
-     * @param handler The function to call; it must accept one parameter of type long, which will be the current value
+     * @param handler The function to call; it must accept one parameter
+     *                of type long, which will be the current value
      */
     void onTurned( EncoderCallback f );
 
