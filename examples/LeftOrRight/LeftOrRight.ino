@@ -29,48 +29,48 @@ volatile bool turnedLeftFlag = false;
 
 void turnedRight()
 {
-  Serial.println( "Right ->" );
+	Serial.println( "Right ->" );
 
-  // Set this back to false so we can watch for the next move
-  turnedRightFlag = false;
+	// Set this back to false so we can watch for the next move
+	turnedRightFlag = false;
 }
 
 void turnedLeft()
 {
-  Serial.println( "<- Left" );
+	Serial.println( "<- Left" );
 
-  // Set this back to false so we can watch for the next move
-  turnedLeftFlag = false;
+	// Set this back to false so we can watch for the next move
+	turnedLeftFlag = false;
 }
 
 void knobCallback( long value )
 {
-  // See the note in the `loop()` function for
-  // an explanation as to why we're setting
-  // boolean values here instead of running
-  // functions directly.
+	// See the note in the `loop()` function for
+	// an explanation as to why we're setting
+	// boolean values here instead of running
+	// functions directly.
 
-  // Don't do anything if either flag is set;
-  // it means we haven't taken action yet
-  if( turnedRightFlag || turnedLeftFlag )
-    return;
+	// Don't do anything if either flag is set;
+	// it means we haven't taken action yet
+	if( turnedRightFlag || turnedLeftFlag )
+		return;
 
-  // Set a flag that we can look for in `loop()`
-  // so that we know we have something to do
-  switch( value )
-  {
-    case 1:
-      turnedRightFlag = true;
-    break;
+	// Set a flag that we can look for in `loop()`
+	// so that we know we have something to do
+	switch( value )
+	{
+		case 1:
+	  		turnedRightFlag = true;
+		break;
 
-    case -1:
-      turnedLeftFlag = true;
-    break;
-  }
+		case -1:
+	  		turnedLeftFlag = true;
+		break;
+	}
 
-  // Override the tracked value back to 0 so that 
-  // we can continue tracking right/left events
-  rotaryEncoder.setEncoderValue( 0 );
+	// Override the tracked value back to 0 so that
+	// we can continue tracking right/left events
+	rotaryEncoder.setEncoderValue( 0 );
 }
 
 void buttonCallback()
@@ -82,41 +82,41 @@ void setup()
 {
 	Serial.begin( 115200 );
 
-  // This tells the library that the encoder has its own pull-up resistors
-  rotaryEncoder.setEncoderType( EncoderType::HAS_PULLUP );
+	// This tells the library that the encoder has its own pull-up resistors
+	rotaryEncoder.setEncoderType( EncoderType::HAS_PULLUP );
 
-  // The encoder will only return -1, 0, or 1, and will not wrap around.
-  rotaryEncoder.setBoundaries( -1, 1, false );
+	// The encoder will only return -1, 0, or 1, and will not wrap around.
+	rotaryEncoder.setBoundaries( -1, 1, false );
 
-  // The function specified here will be called every time the knob is turned
+	// The function specified here will be called every time the knob is turned
 	// and the current value will be passed to it
-  rotaryEncoder.onTurned( &knobCallback );
+	rotaryEncoder.onTurned( &knobCallback );
 
 	// The function specified here will be called every time the button is pushed
-  rotaryEncoder.onPressed( &buttonCallback );
-  
+	rotaryEncoder.onPressed( &buttonCallback );
+
 	// This is where the inputs are configured and the interrupts get attached
-  rotaryEncoder.begin();
+	rotaryEncoder.begin();
 }
 
 void loop()
 {
-  // Check to see if a flag is set (is true), and if so, run a function.
-  //
-  // Why do it like this instead of within the `knobCallback()` function?
-  //
-  // Because the `knobCallback()` function is executed by a internal
-  // timer ISR (interrupt service routine), which needs to be fast and
-  // lean, so setting a boolean is the fastest way, and then let the main
-  // `loop()` do the heavy-lifting.
-  //
-  // If you were to let the `knobCallback()` function do all the work,
-  // there's a chance you'd have issues with WiFi or Bluetooth connections,
-  // or even cause the MCU to crash.
+	// Check to see if a flag is set (is true), and if so, run a function.
+	//
+	// Why do it like this instead of within the `knobCallback()` function?
+	//
+	// Because the `knobCallback()` function is executed by a internal
+	// timer ISR (interrupt service routine), which needs to be fast and
+	// lean, so setting a boolean is the fastest way, and then let the main
+	// `loop()` do the heavy-lifting.
+	//
+	// If you were to let the `knobCallback()` function do all the work,
+	// there's a chance you'd have issues with WiFi or Bluetooth connections,
+	// or even cause the MCU to crash.
 
-  if( turnedRightFlag )
-    turnedRight();
+	if( turnedRightFlag )
+		turnedRight();
 
-  else if( turnedLeftFlag )
-    turnedLeft();
+	else if( turnedLeftFlag )
+		turnedLeft();
 }
