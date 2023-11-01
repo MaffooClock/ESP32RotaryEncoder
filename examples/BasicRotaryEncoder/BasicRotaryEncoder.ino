@@ -27,7 +27,7 @@ const int8_t  DO_ENCODER_VCC = 13;
 RotaryEncoder rotaryEncoder( DI_ENCODER_A, DI_ENCODER_B, DI_ENCODER_SW, DO_ENCODER_VCC );
 
 
-void knobCallback( int value )
+void knobCallback( long value )
 {
 	Serial.printf( "Value: %i\n", value );
 }

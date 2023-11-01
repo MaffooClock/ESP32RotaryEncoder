@@ -100,7 +100,7 @@ Adding a rotary encoder instance is easy:
 4. Add callbacks:
 
     ```c++
-    void knobCallback( int value )
+    void knobCallback( long value )
     {
         // This gets executed every time the knob is turned
 

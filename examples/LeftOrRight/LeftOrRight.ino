@@ -43,7 +43,7 @@ void turnedLeft()
   turnedLeftFlag = false;
 }
 
-void knobCallback( int value )
+void knobCallback( long value )
 {
   // See the note in the `loop()` function for
   // an explanation as to why we're setting
