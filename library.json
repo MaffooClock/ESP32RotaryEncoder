@@ -25,6 +25,11 @@
       "name": "Two Rotary Encoders",
       "base": "examples/TwoRotaryEncoders",
       "files": [ "TwoRotaryEncoders.ino" ]
+    },
+    {
+      "name": "Left or Right",
+      "base": "examples/LeftOrRight",
+      "files": [ "LeftOrRight.ino" ]
     }
   ],
   "frameworks": "arduino",
