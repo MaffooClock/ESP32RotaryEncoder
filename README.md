@@ -58,59 +58,100 @@ Just add `include <ESP32RotaryEncoder.h>` to the top of your source file.
 
 Adding a rotary encoder instance is easy:
 
-```c++
-#include <Arduino.h>
-#include <ESP32RotaryEncoder.h>
+1. Include the library:
 
-#define DO_ENCODER_VCC D2
-#define DI_ENCODER_SW  D3
-#define DI_ENCODER_B   D4 // DT
-#define DI_ENCODER_A   D5 // CLK
+    ```c++
+    #include <ESP32RotaryEncoder.h>
+    ```
 
 
-RotaryEncoder rotaryEncoder( DI_ENCODER_A, DI_ENCODER_B, DI_ENCODER_SW, DO_ENCODER_VCC );
+2. Define which pins to use, if you prefer to do it this way -- you could also just set the pins in the constructor (step 3):
 
+    ```c++
+    // Change these to the actual pin numbers that you've connected your rotary encoder to
+    const int8_t  DO_ENCODER_VCC = D2; // Only needed if you're using a GPIO pin to supply the 3.3v reference
+    const int8_t  DI_ENCODER_SW  = D3; // Pushbutton, if your rotary encoder has it
+    const uint8_t DI_ENCODER_A   = D5; // Might be labeled CLK
+    const uint8_t DI_ENCODER_B   = D4; // Might be labeled DT
+    ```
 
-void knobCallback( int value )
-{
-    Serial.printf( PSTR("Value: %i\n"), value );
-}
+3.  Instantiate a `RotaryEncoder` object:
 
-void buttonCallback()
-{
-    Serial.println( PSTR("boop!") );
-}
+    a)  This uses a GPIO pin to provide the 3.3v reference:
+    ```c++
+    RotaryEncoder rotaryEncoder( DI_ENCODER_A, DI_ENCODER_B, DI_ENCODER_SW, DO_ENCODER_VCC );
+    ```
 
-void setup()
-{
-    Serial.begin( 115200 );
+    b)  ...or you can free up the GPIO pin and tie Vcc to 3V3, then just omit that argument:
+    ```c++
+    RotaryEncoder rotaryEncoder( DI_ENCODER_A, DI_ENCODER_B, DI_ENCODER_SW );
+    ```
 
-    // This tells the library that the encoder has its own pull-up resistors
-    rotaryEncoder.setEncoderType( EncoderType::HAS_PULLUP );
+    c)  ...or maybe your rotary encoder doesn't have a pushbutton?
+    ```c++
+    RotaryEncoder rotaryEncoder( DI_ENCODER_A, DI_ENCODER_B );
+    ```
 
-    // Range of values to be returned by the encoder: minimum is 1, maximum is 10
-    // The third argument specifies whether turning past the minimum/maximum will
-    // wrap around to the other side:
-    //  - true  = turn past 10, wrap to 1; turn past 1, wrap to 10
-    //  - false = turn past 10, stay on 10; turn past 1, stay on 1
-    rotaryEncoder.setBoundaries( 1, 10, true );
+    d)  ...or you want to use a different library with the pushbutton, but still use a GPIO to provide the 3.3v reference:
+    ```c++
+    RotaryEncoder rotaryEncoder( DI_ENCODER_A, DI_ENCODER_B, -1, DO_ENCODER_VCC );
+    ```
 
-    // The function specified here will be called every time the knob is turned
-    // and the current value will be passed to it
-    rotaryEncoder.onTurned( &knobCallback );
+4. Add callbacks:
 
-    // The function specified here will be called every time the button is pushed
-    rotaryEncoder.onPressed( &buttonCallback );
+    ```c++
+    void knobCallback( int value )
+    {
+        // This gets executed every time the knob is turned
 
-    // This is where the inputs are configured and the interrupts get attached
-    rotaryEncoder.begin();
-}
+        Serial.printf( PSTR("Value: %i\n"), value );
+    }
 
-void loop()
-{
-    // Your stuff here
-}
-```
+    void buttonCallback()
+    {
+        // This gets executed every time the pushbutton is pressed
+
+        Serial.println( PSTR("boop!") );
+    }
+    ```
+
+5. Configure and initialize the `RotaryEncoder` object:
+
+    ```c++
+    void setup()
+    {
+        Serial.begin( 115200 );
+
+        // This tells the library that the encoder has its own pull-up resistors
+        rotaryEncoder.setEncoderType( EncoderType::HAS_PULLUP );
+
+        // Range of values to be returned by the encoder: minimum is 1, maximum is 10
+        // The third argument specifies whether turning past the minimum/maximum will
+        // wrap around to the other side:
+        //  - true  = turn past 10, wrap to 1; turn past 1, wrap to 10
+        //  - false = turn past 10, stay on 10; turn past 1, stay on 1
+        rotaryEncoder.setBoundaries( 1, 10, true );
+
+        // The function specified here will be called every time the knob is turned
+        // and the current value will be passed to it
+        rotaryEncoder.onTurned( &knobCallback );
+
+        // The function specified here will be called every time the button is pushed
+        rotaryEncoder.onPressed( &buttonCallback );
+
+        // This is where the inputs are configured and the interrupts get attached
+        rotaryEncoder.begin();
+    }
+    ```
+
+6. Done!  The library doesn't require you to do anything in `loop()`:
+
+    ```c++
+    void loop()
+    {
+        // Your stuff here
+    }
+    ```
 
 There are other options and methods you can call, but this is just the most basic implementation.
 
