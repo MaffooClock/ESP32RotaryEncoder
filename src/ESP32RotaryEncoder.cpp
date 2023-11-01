@@ -140,7 +140,7 @@ void RotaryEncoder::attachInterrupts()
   attachInterrupt( encoderPinA, std::bind( &RotaryEncoder::_encoder_ISR, this ), CHANGE );
   attachInterrupt( encoderPinB, std::bind( &RotaryEncoder::_encoder_ISR, this ), CHANGE );
 
-  if( encoderPinButton >= 0 )
+  if( encoderPinButton > RE_DEFAULT_PIN )
     attachInterrupt( encoderPinButton, std::bind( &RotaryEncoder::_button_ISR, this ), RISING );
 
   ESP_LOGD( LOG_TAG, "Interrupts attached" );
