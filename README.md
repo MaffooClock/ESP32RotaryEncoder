@@ -156,7 +156,7 @@ Adding a rotary encoder instance is easy:
 
 There are other options and methods you can call, but this is just the most basic implementation.
 
-> **Warning**
+> [!IMPORTANT]
 > Keep the `onTurned()` and `onPressed()` callbacks lightweight, and definitely _do not_ use any calls to `delay()` here.  If you need to do some heavy lifting or use delays, it's better to set a flag here, then check for that flag in your `loop()` and run the appropriate functions from there.
 
 
