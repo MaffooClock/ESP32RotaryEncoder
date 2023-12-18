@@ -1,8 +1,16 @@
 name: Compile Examples
 
 on:
-  - push
-  - pull_request
+  push:
+    paths:
+      - 'src/*.h'
+      - 'src/*.cpp'
+      - 'examples/**.ino'
+  pull_request:
+    paths:
+      - 'src/*.h'
+      - 'src/*.cpp'
+      - 'examples/**.ino'
 
 jobs:
   compile-examples:
