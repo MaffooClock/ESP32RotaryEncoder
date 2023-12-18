@@ -31,7 +31,7 @@ jobs:
           libraries: |
             - source-path: ./
 
-          enable-deltas-report: true
+          enable-deltas-report: false
           sketches-report-path: ${{ env.SKETCHES_REPORTS_PATH }}
 
       - name: Save sketches report as workflow artifact
