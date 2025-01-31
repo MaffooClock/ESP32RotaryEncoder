@@ -49,6 +49,7 @@ typedef enum {
 class RotaryEncoder {
 
   protected:
+    mutable portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
 
     #if defined( ESP32 )
       typedef std::function<void(long)> EncoderCallback;
