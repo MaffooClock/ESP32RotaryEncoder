@@ -48,53 +48,63 @@ void RotaryEncoder::setEncoderType( EncoderType type )
 
 void RotaryEncoder::setBoundaries( long minValue, long maxValue, bool circleValues )
 {
-  portENTER_CRITICAL(&mux);
+  portENTER_CRITICAL( &mux );
+
   if( minValue > maxValue )
     ESP_LOGW( LOG_TAG, "Minimum value (%ld) is greater than maximum value (%ld); behavior is undefined.", minValue, maxValue );
 
   setMinValue( minValue );
   setMaxValue( maxValue );
   setCircular( circleValues );
-  portEXIT_CRITICAL(&mux);
+
+  portEXIT_CRITICAL( &mux );
 }
 
 void RotaryEncoder::setMinValue( long minValue )
 {
-  portENTER_CRITICAL(&mux);
+  portENTER_CRITICAL( &mux );
+
   ESP_LOGD( LOG_TAG, "minValue = %ld", minValue );
 
   this->minEncoderValue = minValue;
-  portEXIT_CRITICAL(&mux);
+
+  portEXIT_CRITICAL( &mux );
 }
 
 void RotaryEncoder::setMaxValue( long maxValue )
 {
-  portENTER_CRITICAL(&mux);
+  portENTER_CRITICAL( &mux );
+
   ESP_LOGD( LOG_TAG, "maxValue = %ld", maxValue );
 
   this->maxEncoderValue = maxValue;
-  portEXIT_CRITICAL(&mux);
+
+  portEXIT_CRITICAL( &mux );
 }
 
 void RotaryEncoder::setCircular( bool circleValues )
 {
-  portENTER_CRITICAL(&mux);
+  portENTER_CRITICAL( &mux );
+
   ESP_LOGD( LOG_TAG, "Boundaries %s circular", ( circleValues ? "are" : "are not" ) );
 
   this->circleValues = circleValues;
-  portEXIT_CRITICAL(&mux);
+
+  portEXIT_CRITICAL( &mux );
 }
 
 void RotaryEncoder::setStepValue( long stepValue )
 {
-  portENTER_CRITICAL(&mux);
+  portENTER_CRITICAL( &mux );
+
   ESP_LOGD( LOG_TAG, "stepValue = %ld", stepValue );
 
   if( stepValue > maxEncoderValue || stepValue < minEncoderValue )
     ESP_LOGW( LOG_TAG, "Step value (%ld) is outside the bounds (%ld...%ld); behavior is undefined.", stepValue, minEncoderValue, maxEncoderValue );
 
   this->stepValue = stepValue;
-  portEXIT_CRITICAL(&mux);
+
+  portEXIT_CRITICAL( &mux );
 }
 
 void RotaryEncoder::onTurned( EncoderCallback f )
@@ -226,7 +236,8 @@ void RotaryEncoder::disable()
 
 bool RotaryEncoder::buttonPressed()
 {
-  portENTER_CRITICAL(&mux);
+  portENTER_CRITICAL( &mux );
+
   if( !_isEnabled )
     return false;
 
@@ -236,14 +247,16 @@ bool RotaryEncoder::buttonPressed()
   bool wasPressed = buttonPressedFlag;
 
   buttonPressedFlag = false;
-  portEXIT_CRITICAL(&mux);
+
+  portEXIT_CRITICAL( &mux );
 
   return wasPressed;
 }
 
 bool RotaryEncoder::encoderChanged()
 {
-  portENTER_CRITICAL(&mux);
+  portENTER_CRITICAL( &mux );
+
   if( !_isEnabled )
     return false;
 
@@ -253,19 +266,21 @@ bool RotaryEncoder::encoderChanged()
   bool hasChanged = encoderChangedFlag;
 
   encoderChangedFlag = false;
-  portEXIT_CRITICAL(&mux);
+
+  portEXIT_CRITICAL( &mux );
 
   return hasChanged;
 }
 
 long RotaryEncoder::getEncoderValue()
 {
-  portENTER_CRITICAL(&mux);
+  portENTER_CRITICAL( &mux );
+
   constrainValue();
 
   long value = currentValue;
 
-  portEXIT_CRITICAL(&mux);
+  portEXIT_CRITICAL( &mux );
 
   return value;
 }
@@ -286,14 +301,16 @@ void RotaryEncoder::constrainValue()
 
 void RotaryEncoder::setEncoderValue( long newValue )
 {
-  portENTER_CRITICAL(&mux);
+  portENTER_CRITICAL( &mux );
+
   if( newValue != currentValue )
     ESP_LOGD( LOG_TAG, "Overriding encoder value from '%ld' to '%ld'", currentValue, newValue );
 
   currentValue = newValue;
 
   constrainValue();
-  portEXIT_CRITICAL(&mux);
+
+  portEXIT_CRITICAL( &mux );
 }
 
 void ARDUINO_ISR_ATTR RotaryEncoder::loop()
@@ -307,7 +324,8 @@ void ARDUINO_ISR_ATTR RotaryEncoder::loop()
 
 void ARDUINO_ISR_ATTR RotaryEncoder::_button_ISR()
 {
-  portENTER_CRITICAL_ISR(&mux);
+  portENTER_CRITICAL_ISR( &mux );
+
   static unsigned long _lastInterruptTime = 0;
 
   // Simple software de-bounce
@@ -334,12 +352,14 @@ void ARDUINO_ISR_ATTR RotaryEncoder::_button_ISR()
   }
 
   _lastInterruptTime = millis();
-  portEXIT_CRITICAL_ISR(&mux);
+
+  portEXIT_CRITICAL_ISR( &mux );
 }
 
 void ARDUINO_ISR_ATTR RotaryEncoder::_encoder_ISR()
 {
-  portENTER_CRITICAL_ISR(&mux);
+  portENTER_CRITICAL_ISR( &mux );
+
   /**
    * Almost all of this came from a blog post by Garry on GarrysBlog.com:
    * https://garrysblog.com/2021/03/20/reliably-debouncing-rotary-encoders-with-arduino-and-esp32/
@@ -410,5 +430,6 @@ void ARDUINO_ISR_ATTR RotaryEncoder::_encoder_ISR()
     // Remember current time so we can calculate speed
     _lastInterruptTime = millis();
   }
-  portEXIT_CRITICAL_ISR(&mux);
+
+  portEXIT_CRITICAL_ISR( &mux );
 }
