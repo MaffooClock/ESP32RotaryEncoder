@@ -387,12 +387,12 @@ void ARDUINO_ISR_ATTR RotaryEncoder::_encoder_ISR()
    * Based on how fast the encoder is being turned, we can apply an acceleration factor
    */
 
-  unsigned long speed = millis() - _lastInterruptTime;
+  unsigned long speed = micros() - _lastInterruptTime;
 
-  if( speed > 40 )                                 // Greater than 40 milliseconds
+  if( speed > 40000UL )                            // Greater than 40 milliseconds
     _stepValue = this->stepValue;                  // Increase/decrease by 1 x stepValue
 
-  else if( speed > 20 )                            // Greater than 20 milliseconds
+  else if( speed > 20000UL )                       // Greater than 20 milliseconds
     _stepValue = ( this->stepValue <= 9 ) ?        // Increase/decrease by 3 x stepValue
       this->stepValue : ( this->stepValue * 3 )    // But only if stepValue > 9
     ;
@@ -428,7 +428,7 @@ void ARDUINO_ISR_ATTR RotaryEncoder::_encoder_ISR()
     _encoderPosition = 0;
 
     // Remember current time so we can calculate speed
-    _lastInterruptTime = millis();
+    _lastInterruptTime = micros();
   }
 
   portEXIT_CRITICAL_ISR( &mux );
