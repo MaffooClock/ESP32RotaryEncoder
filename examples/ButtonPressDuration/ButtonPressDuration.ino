@@ -1,14 +1,14 @@
 /**
  * ESP32RotaryEncoder: ButtonPressDuration.ino
- * 
+ *
  * This example shows how to handle long button-presses differently
  * from long button-presses
- * 
+ *
  * Turning the knob will increment/decrement a value between 1 and 10 and
  * print it to the serial console.
- * 
+ *
  * Pressing the button will output "boop!" to the serial console.
- * 
+ *
  * Created 1 November 2023
  * By Matthew Clark
  */
@@ -62,8 +62,9 @@ void setup()
 {
 	Serial.begin( 115200 );
 
-	// This tells the library that the encoder has its own pull-up resistors
-	rotaryEncoder.setEncoderType( EncoderType::HAS_PULLUP );
+	// Uncomment if your encoder does not have its own pull-up resistors
+	//rotaryEncoder.enableEncoderPinPullup();
+	//rotaryEncoder.enableButtonPinPullup();
 
 	// Range of values to be returned by the encoder: minimum is 1, maximum is 10
 	// The third argument specifies whether turning past the minimum/maximum will

@@ -15,20 +15,17 @@
 
 #include <atomic>
 
-static constexpr int8_t RE_DEFAULT_PIN = -1;
-static constexpr uint8_t RE_DEFAULT_STEPS = 4;
-static constexpr uint64_t RE_LOOP_INTERVAL = 100000U;  // 0.1 seconds
-
-typedef enum {
-  FLOATING,
-  HAS_PULLUP,
-  SW_FLOAT
-} EncoderType;
-
 class RotaryEncoder {
+  public:
+    static constexpr int8_t RE_DEFAULT_PIN = -1;
+    static constexpr uint8_t RE_DEFAULT_STEPS = 4;
+    static constexpr uint64_t RE_LOOP_INTERVAL = 100000U;  // 0.1 seconds
 
-  protected:
-    mutable portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
+    typedef enum {
+      FLOATING,
+      HAS_PULLUP,
+      SW_FLOAT
+    } Type;
 
     #if defined( ESP32 )
       typedef std::function<void(long)> EncoderCallback;
@@ -37,9 +34,6 @@ class RotaryEncoder {
       typedef void (*EncoderCallback)(long);
       typedef void (*ButtonCallback)(unsigned long);
     #endif
-
-
-  public:
 
     /**
      * @brief Construct a new Rotary Encoder instance
@@ -60,20 +54,34 @@ class RotaryEncoder {
 
     /**
      * @brief Responsible for detaching interrupts and clearing the loop timer
-     *
      */
     ~RotaryEncoder();
 
     /**
-     * @brief Specifies whether the encoder pins need to use the internal pull-up resistors.
+     * @brief Enable the internal pull-up resistor for the encoder pin.
      *
-     * @note Call this in `setup()`.
+     * By default, the encoder pin on the ESP32 is floating - which requires that
+     * the encoder module has its own pull-up resistors or external pull-ups are used.
      *
-     * @param type  FLOATING if you're using a raw encoder not mounted to a PCB (internal pull-ups will be used);
-     *              HAS_PULLUP if your encoder is a module that has pull-up resistors, (internal pull-ups will not be used);
-     *              SW_FLOAT your encoder is a module that has pull-up resistors, but the resistor for the switch is missing (internal pull-up will be used for switch input only)
+     * If the encoder module does not have its own pull-ups, calling this method
+     * will enable the internal pull-up in the ESP32.
+     *
+     * @note Call this before `begin()`. It has no effect after.
      */
-    void setEncoderType( EncoderType type );
+    void enableEncoderPinPullup() { encoderPinMode = INPUT_PULLUP; }
+
+    /**
+     * @brief Enable the internal pull-up resistor for the button pin.
+     *
+     * By default, the button pin on the ESP32 is floating - which requires that
+     * the button has its own pull-up resistors or external pull-ups are used.
+     *
+     * If the button does not have its own pull-ups, calling this method
+     * will enable the internal pull-up in the ESP32.
+     *
+     * @note Call this before `begin()`. It has no effect after.
+     */
+    void enableButtonPinPullup() { buttonPinMode = INPUT_PULLUP; }
 
     /**
      * @brief Set the minimum and maximum values that the encoder will return.
@@ -147,13 +155,11 @@ class RotaryEncoder {
      * @brief Sets up the GPIO pins specified in the constructor and attaches the ISR callback for the encoder.
      *
      * @note Call this in `setup()` after other "set" methods.
-     *
      */
     void begin( bool useTimer = true );
 
     /**
      * @brief Enables the encoder knob and pushbutton if `disable()` was previously used.
-     *
      */
     void enable();
 
@@ -161,7 +167,6 @@ class RotaryEncoder {
      * @brief Disables the encoder knob and pushbutton.
      *
      * Knob rotation and button presses will have no effect until after `enable()` is called
-     *
      */
     void disable();
 
@@ -214,26 +219,11 @@ class RotaryEncoder {
      * @note This will try to set the value to 0, but if the minimum and maximum configured
      * by `setBoundaries()` does not include 0, then the minimum or maximum will be
      * used instead
-     *
      */
     void resetEncoderValue() { setEncoderValue( 0 ); }
 
-    /**
-     * @brief Synchronizes the encoder value and button state from ISRs.
-     *
-     * Runs on a timer and calls `encoderChanged()` and `buttonPressed()` to determine
-     * if user-specified callbacks should be run.
-     *
-     * This would normally be called in userspace `loop()`, but we're using the `loopTimer` instead.
-     *
-     */
-    void loop();
-
   private:
     const char *LOG_TAG = "ESP32RotaryEncoder";
-
-    EncoderCallback callbackEncoderChanged = NULL;
-    ButtonCallback callbackButtonPressed = NULL;
 
     typedef enum {
         LEFT  = -1,
@@ -247,6 +237,11 @@ class RotaryEncoder {
       LEFT,  STILL, STILL, RIGHT,
       STILL, RIGHT, LEFT,  STILL
     };
+
+    mutable portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
+
+    EncoderCallback callbackEncoderChanged = NULL;
+    ButtonCallback callbackButtonPressed = NULL;
 
     int encoderPinMode = INPUT;
     int buttonPinMode  = INPUT;
@@ -279,6 +274,8 @@ class RotaryEncoder {
 
     esp_timer_handle_t loopTimer;
     void beginLoopTimer();
+    static void timerCallback( void *self );
+    void loop();
 
     void attachInterrupts();
     void detachInterrupts();

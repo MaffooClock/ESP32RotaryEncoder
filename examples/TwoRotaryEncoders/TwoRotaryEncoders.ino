@@ -1,23 +1,23 @@
 /**
  * ESP32RotaryEncoder: TwoRotaryEncoders.ino
- * 
+ *
  * This is a basic example of how to instantiate two distinct Rotary Encoders.
- * 
+ *
  * Rotary Encoder #1:
  *   - Turning the knob will increment/decrement a value between 1 and 10,
  *   and print it to the serial console.
- * 
+ *
  * 	 - Pressing the button will enable/disable Rotary Encoder #2.
- * 
+ *
  * Rotary Encoder #2:
  *   - Turning the knob will increment/decrement a value between -100 and 100,
  *   and print it to the serial console.
- * 
+ *
  * 	 - Pressing the button will enable/disable Rotary Encoder #1.
- * 
+ *
  * While a rotary encoder is disabled, turning the knob or pressing the button
  * will have no effect.
- * 
+ *
  * Created 3 October 2023
  * Updated 1 November 2023
  * By Matthew Clark
@@ -81,8 +81,9 @@ void button2ToggleRE1( unsigned long duration )
 
 void setup_RE1()
 {
-	// This tells the library that the encoder has its own pull-up resistors
-	rotaryEncoder1.setEncoderType( EncoderType::HAS_PULLUP );
+	// Uncomment if your encoder does not have its own pull-up resistors
+	//rotaryEncoder.enableEncoderPinPullup();
+	//rotaryEncoder.enableButtonPinPullup();
 
 	// Range of values to be returned by the encoder: minimum is 1, maximum is 10
 	// The third argument specifies whether turning past the minimum/maximum will
@@ -104,9 +105,9 @@ void setup_RE1()
 
 void setup_RE2()
 {
-	// This tells the library that the encoder does not have its own pull-up
-	// resistors, so the internal pull-up resistors will be enabled
-	rotaryEncoder2.setEncoderType( EncoderType::FLOATING );
+	// Uncomment if your encoder does not have its own pull-up resistors
+	//rotaryEncoder.enableEncoderPinPullup();
+	//rotaryEncoder.enableButtonPinPullup();
 
 	// Range of values to be returned by the encoder: minimum is -100, maximum is 100
 	// The third argument specifies whether turning past the minimum/maximum will wrap

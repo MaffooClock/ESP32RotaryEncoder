@@ -122,8 +122,9 @@ Adding a rotary encoder instance is easy:
     {
         Serial.begin( 115200 );
 
-        // This tells the library that the encoder has its own pull-up resistors
-        rotaryEncoder.setEncoderType( EncoderType::HAS_PULLUP );
+        // Uncomment if your encoder does not have its own pull-up resistors
+        //rotaryEncoder.enableEncoderPinPullup();
+        //rotaryEncoder.enableButtonPinPullup();
 
         // Range of values to be returned by the encoder: minimum is 1, maximum is 10
         // The third argument specifies whether turning past the minimum/maximum will

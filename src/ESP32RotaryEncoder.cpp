@@ -39,33 +39,6 @@ RotaryEncoder::~RotaryEncoder()
   esp_timer_delete( loopTimer );
 }
 
-void RotaryEncoder::setEncoderType( EncoderType type )
-{
-  switch( type )
-  {
-    case FLOATING:
-      encoderPinMode = INPUT_PULLUP;
-      buttonPinMode  = INPUT_PULLUP;
-    break;
-
-    case HAS_PULLUP:
-      encoderPinMode = INPUT;
-      buttonPinMode  = INPUT;
-    break;
-
-    case SW_FLOAT:
-      encoderPinMode = INPUT;
-      buttonPinMode  = INPUT_PULLUP;
-    break;
-
-    default:
-      ESP_LOGE( LOG_TAG, "Invalid encoder type %i", type );
-      return;
-  }
-
-  ESP_LOGD( LOG_TAG, "Encoder type set to %i", type );
-}
-
 void RotaryEncoder::setBoundaries( long minValue, long maxValue, bool circleValues )
 {
   ESP_LOGD( LOG_TAG, "boundary minValue = %ld, maxValue = %ld, circular = %s", minValue, maxValue, ( circleValues ? "true" : "false" ) );
@@ -127,12 +100,6 @@ void RotaryEncoder::onPressed( ButtonCallback f )
   callbackButtonPressed = f;
 }
 
-static void timerCallback( void *arg )
-{
-  RotaryEncoder *instance = (RotaryEncoder *)arg;
-  instance->loop();
-}
-
 void RotaryEncoder::beginLoopTimer()
 {
   /**
@@ -157,6 +124,12 @@ void RotaryEncoder::beginLoopTimer()
 
   esp_timer_create( &_timerConfig, &loopTimer );
   esp_timer_start_periodic( loopTimer, RE_LOOP_INTERVAL );
+}
+
+void RotaryEncoder::timerCallback( void *self )
+{
+  RotaryEncoder *instance = (RotaryEncoder *)self;
+  instance->loop();
 }
 
 void RotaryEncoder::attachInterrupts()
