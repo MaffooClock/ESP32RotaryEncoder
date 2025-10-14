@@ -21,6 +21,22 @@
   #endif
 #endif
 
+static const DRAM_ATTR char *LOG_TAG = "ESP32RotaryEncoder";
+
+typedef enum {
+    LEFT  = -1,
+    STILL =  0,
+    RIGHT =  1
+} Rotation;
+
+static const Rotation encoderStates[16] = {
+  STILL, LEFT,  RIGHT, STILL,
+  RIGHT, STILL, STILL, LEFT,
+  LEFT,  STILL, STILL, RIGHT,
+  STILL, RIGHT, LEFT,  STILL
+};
+
+
 RotaryEncoder::RotaryEncoder( uint8_t encoderPinA, uint8_t encoderPinB, int8_t buttonPin, int8_t vccPin, uint8_t encoderSteps )
   : encoderPinA{ encoderPinA },
     encoderPinB{ encoderPinB },
@@ -332,10 +348,10 @@ void RotaryEncoder::setEncoderValue( long newValue )
 
 void ARDUINO_ISR_ATTR RotaryEncoder::loop()
 {
-  if( callbackEncoderChanged != NULL && encoderChanged() )
+  if( callbackEncoderChanged != nullptr && encoderChanged() )
     callbackEncoderChanged( getEncoderValue() );
 
-  if( callbackButtonPressed != NULL && buttonPressed() )
+  if( callbackButtonPressed != nullptr && buttonPressed() )
     callbackButtonPressed( buttonPressedDuration );
 }
 
