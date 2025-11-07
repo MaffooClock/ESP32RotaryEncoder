@@ -21,6 +21,14 @@
   #endif
 #endif
 
+#if __cplusplus >= 201703L
+  #define MAYBE_UNUSED [[maybe_unused]]
+#elif defined( __GNUC__ ) || defined( __clang__ )
+  #define MAYBE_UNUSED __attribute__((unused))
+#else
+  #define MAYBE_UNUSED
+#endif
+
 RotaryEncoder::RotaryEncoder( uint8_t encoderPinA, uint8_t encoderPinB, int8_t buttonPin, int8_t vccPin, uint8_t encoderSteps )
   : encoderPinA{ encoderPinA },
     encoderPinB{ encoderPinB },
@@ -258,7 +266,7 @@ bool RotaryEncoder::buttonPressed()
   }
 
   bool wasPressed;
-  unsigned long duration;
+  MAYBE_UNUSED unsigned long duration;
 
   portENTER_CRITICAL( &mux );
   wasPressed = buttonPressedFlag;
@@ -279,7 +287,7 @@ bool RotaryEncoder::encoderChanged()
   }
 
   bool hasChanged;
-  long value;
+  MAYBE_UNUSED long value;
 
   portENTER_CRITICAL( &mux );
   hasChanged = encoderChangedFlag;
